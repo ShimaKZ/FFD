@@ -2,14 +2,15 @@ import vtk
 
 def resizePolyData(data, resize):
     """
-    Simplify the poly data by reducing the number of vertices.
+    通过减少顶点数量来简化 polydata
 
-    Args:
-        data (vtkPolyData): The polydata to be simplified.
-        resize (float): The target reduction proportion (0.0 to 1.0).
-    
-    Returns:
-        vtkPolyData: The simplified polydata.
+    参数:
+        data (vtkPolyData): 需要被简化的 polydata
+        resize (float): 目标缩减比例（从 0.0 到 1.0)
+
+    返回:
+    vtkPolyData: 简化后的 polydata。
+
     """
 
     if not (0 <= resize <= 1):
@@ -27,13 +28,14 @@ def resizePolyData(data, resize):
 
 
 def extractColorsFromFile(filename):
-    """Extracts color information from a given file.
+    """
+    从给定文件中提取颜色信息
 
-    Args:
-        filename (str): the file containing color data.
+    参数:
+        filename (str): 包含颜色数据的文件。
 
-    Returns:
-        list of tuple: A list of RGB color tuples.
+    返回:
+        list of tuple: 一个包含 RGB 颜色元组的列表。
     """
     extractedColors = []
     with open(filename, "r") as file:
@@ -46,14 +48,15 @@ def extractColorsFromFile(filename):
     return extractedColors
 
 def applyColorsToPoints(polydata, pointColors=[]):
-    """Apply RGB colors to the points in a VTK polydata object.
+    """
+    将 RGB 颜色应用到 VTK polydata 对象的点上
 
-    Args: 
-        polydata (vtkPolyData): The VTK polydata to color.
-        pointColors (list of tuple): List of color tuples (R, G, B).
+    参数:
+        polydata (vtkPolyData): 要着色的 VTK polydata。
+        pointColors (list of tuple): 颜色元组 (R, G, B) 的列表。
 
-    Returns:
-        vtkPolyData: The colored polydata.
+    返回:
+        vtkPolyData: 已着色的 polydata。
     """
     colorArray = vtk.vtkUnsignedCharArray()
     colorArray.SetNumberOfComponents(3)
