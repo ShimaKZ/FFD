@@ -36,7 +36,7 @@ class FFD(object):
                 lambda x:x ** 3 / 6
                ]
     def initFFD(self):
-        tmpPoints=copy.deepcopy(self,initialPoints)
+        tmpPoints=copy.deepcopy(self.initialPoints)
         [self.minX,self.minY,self.minZ,self.maxX,self.maxY,self.maxZ]=[tmpPoints[0][0],tmpPoints[0][1],tmpPoints[0][2],tmpPoints[0][0],tmpPoints[0][1],tmpPoints[0][2]]
         for points in tmpPoints:
             self.minX=min(self.minX,points[0])
@@ -45,7 +45,7 @@ class FFD(object):
             self.maxY=max(self.maxY,points[1])
             self.minZ=min(self.minZ,points[2])
             self.maxZ=max(self.maxZ,points[2])
-        del tmptmpPoints
+        del tmpPoints
         self.spaceX=(self.maxX-self.minX)/(self.controlPointNumX-1)
         self.spaceY=(self.maxY-self.minY)/(self.controlPointNumY-1)
         self.spaceZ=(self.maxZ-self.minZ)/(self.controlPointNumZ-1)
@@ -53,7 +53,7 @@ class FFD(object):
         self.controlPointsOffset=[[[np.array([0.,0.,0.])for z in range(self.controlPointNumZ)]for y in range(self.controlPointNumY)] for x in range(self.controlPointNumX)]
         self.controlPointsPosition=[[[np.array([self.minX + x * self.spaceX,self.minY + y * self.spaceY, self.minZ + z * self.spaceZ]) for z in range(self.controlPointNumZ)]for y in range(self.controlPointNumY)] for x in range(self.controlPointNumX)]
         self.objectPoints = {}
-
+        self.cache={}
         for x in range(self.controlPointNumX):
             for y in range(self.controlPointNumY):
                 for z in range(self.controlPointNumZ):
