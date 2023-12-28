@@ -7,6 +7,7 @@ from VtkModel import VtkModel
 import vtk
 import gc
 
+
 class widget(QWidget):
     def __init__(self):
         super().__init__()
@@ -15,11 +16,10 @@ class widget(QWidget):
         self.top = 10
         self.width = 800
         self.height = 800
-        self.filename = "/home/xyq/hwcad/ffd/3D-Free-Form-Deformation/bunny.obj"
+        self.filename = "bunny.obj"
         self.initUI()
         self.initializeVTK()
         self.showAll()
-        
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -58,22 +58,19 @@ class widget(QWidget):
         self.vtkWidget = QVTKRenderWindowInteractor(self)
         mainLayout.addWidget(self.vtkWidget)
 
-        
-
-    def initializeVTK(self,dots = 5):
+    def initializeVTK(self, dots=5):
         """ VTK 渲染器和渲染窗口初始化 """
-        self.ren = vtk.vtkRenderer()
-        self.vtkWidget.GetRenderWindow().AddRenderer(self.ren)
-        self.iren = self.vtkWidget.GetRenderWindow().GetInteractor()
+        self.render = vtk.vtkRenderer()
+        self.vtkWidget.GetRenderWindow().AddRenderer(self.render)
+        self.irender = self.vtkWidget.GetRenderWindow().GetInteractor()
         self.dots = dots
         self.dot_xyz = [None, None, None]
 
-        self.model = VtkModel(ren=self.ren, iren=self.iren,
-                              filename=self.filename, xl=dots-1, yl=dots-1, zl=dots - 1)
-        
-        
+        self.model = VtkModel(render=self.render, irender=self.irender,
+                              filename=self.filename, x1=dots - 1, y1=dots - 1, z1=dots - 1)
+
     def showAll(self):
-        self.iren.Initialize()
+        self.irender.Initialize()
         self.show()
 
     def loadFunction(self):
@@ -97,7 +94,7 @@ class widget(QWidget):
         except Exception as e:
             # 在出现错误时打印错误信息
             print("Error loading file:", e)
-    
+
     def saveFunction(self):
         """ 保存 .obj 文件"""
         # 打开文件保存对话框
@@ -118,7 +115,7 @@ class widget(QWidget):
                         color_string = ''
                         if colors and i < colors.GetNumberOfTuples():
                             r, g, b = colors.GetTuple3(i)
-                            color_string = f" {r/255:.3f} {g/255:.3f} {b/255:.3f}"
+                            color_string = f" {r / 255:.3f} {g / 255:.3f} {b / 255:.3f}"
                         file.write(f"v {x} {y} {z}{color_string}\n")
 
                     # 写入面信息
@@ -136,10 +133,12 @@ class widget(QWidget):
     def selectDotFunction(self):
         """ 选择控制点功能槽函数 """
         self.dot_xyz = []
-        prompts = [("X", "leftmost", "rightmost"), ("Y", "most far away from you", "closest initially"), ("Z", "bottom", "top")]
+        prompts = [("X", "leftmost", "rightmost"), ("Y", "most far away from you", "closest initially"),
+                   ("Z", "bottom", "top")]
 
         for axis, start, end in prompts:
-            value, ok = QInputDialog.getInt(self, f"Select Dot {axis}", f"0 is the {start}, {self.dots-1} is the {end}:", 0, 0, self.dots-1, 1)
+            value, ok = QInputDialog.getInt(self, f"Select Dot {axis}",
+                                            f"0 is the {start}, {self.dots - 1} is the {end}:", 0, 0, self.dots - 1, 1)
             if ok:
                 self.dot_xyz.append(value)
             else:
@@ -150,9 +149,7 @@ class widget(QWidget):
         if len(self.dot_xyz) == 3:
             print(f"Selected control dot coordinates: {self.dot_xyz}")
         else:
-            print("Control dot selection incomplete.") 
-           
-    
+            print("Control dot selection incomplete.")
 
     def resetFunction(self):
         """ 重置功能槽函数 """
@@ -162,11 +159,11 @@ class widget(QWidget):
     def quitFunction(self):
         """ 退出功能槽函数 """
         sys.exit(0)
-        
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ffd = widget()
     ffd.show()
-    ffd.iren.Initialize()
+    ffd.irender.Initialize()
     sys.exit(app.exec_())
