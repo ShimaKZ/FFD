@@ -2,9 +2,9 @@ import sys
 import PyQt5.QtWidgets as QtWidgets
 from PyQt5.QtWidgets import (QWidget, QPushButton, QHBoxLayout, QVBoxLayout,
                              QApplication, QInputDialog, QMessageBox, QMainWindow, QAction, QFileDialog)
-from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+import vtkmodules.all as vtk
+from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 from VtkModel import VtkModel
-import vtk
 import gc
 
 

@@ -219,7 +219,7 @@ class VtkModel(object):
                 print("New Position:", xj, yj, zj)
                 print(i, j, k)
                 self.ffd.cacheUpdate((i, j, k), np.array([xj, yj, zj]))
-
+                self.sposition[i][j][k]=[xj, yj, zj]
                 # 重新计算位置改变的球体的坐标
                 n = self.neighbor(i, j, k)
                 count = 0
