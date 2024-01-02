@@ -38,8 +38,8 @@ class widget(QWidget):
         button2 = QPushButton('Save', self)
         button2.clicked.connect(self.saveFunction)
 
-        button3 = QPushButton('SelectDot', self)
-        button3.clicked.connect(self.selectDotFunction)
+        button3 = QPushButton('SetDots', self)
+        button3.clicked.connect(self.setDotsFunction)
 
         button4 = QPushButton('Reset', self)
         button4.clicked.connect(self.resetFunction)
@@ -65,7 +65,6 @@ class widget(QWidget):
         self.irender = self.vtkWidget.GetRenderWindow().GetInteractor()
         self.dots = dots
         self.dot_xyz = [None, None, None]
-
         self.model = VtkModel(render=self.render, irender=self.irender,
                               filename=self.filename, x1=dots - 1, y1=dots - 1, z1=dots - 1)
 
@@ -130,26 +129,13 @@ class widget(QWidget):
         else:
             print("Save operation cancelled.")
 
-    def selectDotFunction(self):
-        """ 选择控制点功能槽函数 """
-        self.dot_xyz = []
-        prompts = [("X", "leftmost", "rightmost"), ("Y", "most far away from you", "closest initially"),
-                   ("Z", "bottom", "top")]
-
-        for axis, start, end in prompts:
-            value, ok = QInputDialog.getInt(self, f"Select Dot {axis}",
-                                            f"0 is the {start}, {self.dots - 1} is the {end}:", 0, 0, self.dots - 1, 1)
-            if ok:
-                self.dot_xyz.append(value)
-            else:
-                print(f"Selection for Dot {axis} canceled.")
-                return
-
-        # 检查是否所有控制点都已选择
-        if len(self.dot_xyz) == 3:
-            print(f"Selected control dot coordinates: {self.dot_xyz}")
-        else:
-            print("Control dot selection incomplete.")
+    def setDotsFunction(self):
+        """ 点阵设置槽函数 """
+        DOTS, ok = QInputDialog.getInt(
+            self, "DOTS SETTING", "Set the number of dots by edge: ", 5, 2, 8, 1)
+        if ok:
+            self.initializeVTK(dots=DOTS)
+            self.showAll()
 
     def resetFunction(self):
         """ 重置功能槽函数 """
