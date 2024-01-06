@@ -1,32 +1,5 @@
 import vtk
 
-def resizePolyData(data, resize):
-    """
-    通过减少顶点数量来简化 polydata
-
-    参数:
-        data (vtkPolyData): 需要被简化的 polydata
-        resize (float): 目标缩减比例（从 0.0 到 1.0)
-
-    返回:
-    vtkPolyData: 简化后的 polydata。
-
-    """
-
-    if not (0 <= resize <= 1):
-        raise ValueError("Resize value must be between 0 and 1")
-
-    polyDataDecimate = vtk.vtkDecimatePro()
-    polyDataDecimate.SetInputData(data)
-    polyDataDecimate.SetTargetReduction(1-resize)
-    polyDataDecimate.PreserveTopologyOff()
-    polyDataDecimate.SplittingOn()
-    polyDataDecimate.BoundaryVertexDeletionOn()
-    polyDataDecimate.SetMaximumError(vtk.VTK_DOUBLE_MAX)
-    polyDataDecimate.Update()
-    return polyDataDecimate.GetOutput()
-
-
 def extractColorsFromFile(filename):
     """
     从给定文件中提取颜色信息

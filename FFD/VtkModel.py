@@ -1,8 +1,8 @@
 import vtk
-from FFD import objReader, FFD
+from FFD import FFD
 import numpy as np
 from time import time
-from OBJProcessing import resizePolyData, applyColorsToPoints, extractColorsFromFile
+from OBJProcessing import  applyColorsToPoints, extractColorsFromFile
 
 
 class VtkModel(object):
@@ -72,52 +72,12 @@ class VtkModel(object):
         self.reader.Update()
         self.data = self.reader.GetOutput()
 
-    # def color(self):
-    #     if self.COLORED:
-    #         return
-    #     else:
-    #         self.data.GetPointData().SetScalars(self.data_color.GetPointData().GetScalars())
-    #         self.COLORED = True
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputData(self.data)
-    #     try:
-    #         self.ren.RemoveActor(self.actor)
-    #         self.actor = vtk.vtkActor()
-    #         self.actor.SetMapper(mapper)
-    #         self.ren.AddActor(self.actor)
-    #     except:
-    #         pass
-
-    # 调整尺寸，对PolyData进行减采样，对Triangle类型有效
-    # def adjust_size(self, resize):
-    #     self.data = resizePolyData(self.data, resize)
-    #     self.data_color = resizePolyData(self.data_color, resize)
-    #
-    #     self.points = self.data.GetPoints()
-    #     vertices = [self.points.GetPoint(i) for i in range(self.points.GetNumberOfPoints())]
-    #     self.ffd = FFD(pointNumX=self.x1 + 1, pointNumY=self.y1 + 1, pointNumZ=self.z1 + 1, objFile=self.filename,
-    #                    points=vertices)
-    #     self.ffd.initFFD()
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputData(self.data)
-    #     self.render.RemoveActor(self.actor)
-    #     self.actor = vtk.vtkActor()
-    #     self.actor.SetMapper(mapper)
-    #     self.render.AddActor(self.actor)
-
-    # 绘制人脸并选择是否上色和控制缩放比例
     def drawface(self, resize=1.0, color=False):
         self.data_color = vtk.vtkPolyData()
         self.data_color.DeepCopy(self.data)
         self.data_color = applyColorsToPoints(self.data_color, extractColorsFromFile(self.filename))
         self.colored = False
 
-        if color:
-            self.color()
-
-        if resize != 1:
-            self.data = resizePolyData(self.data, resize)
-            self.data_color = resizePolyData(self.data_color, resize)
 
         self.points = self.data.GetPoints()
         vertices = [self.points.GetPoint(i) for i in range(self.points.GetNumberOfPoints())]
@@ -148,7 +108,6 @@ class VtkModel(object):
             x, y, z = self.ijk_to_xyz(i, j, k)
             swidget.SetCenter(x, y, z)
             swidget.SetRadius(self.r)
-            # swidget.GetSphereProperty().SetColor(0, 1.0, 0)
             swidget.SetRepresentationToSurface()
             swidget.On()
             self.slist[i][j][k] = swidget
@@ -258,9 +217,9 @@ class VtkModel(object):
         self.ffd.cacheReset()
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputData(self.data)
-        # 删去原始人脸
+        # 删去原始模型
         self.render.RemoveActor(self.actor)
-        # 更新人脸
+        # 更新模型
         self.actor = vtk.vtkActor()
         self.actor.SetMapper(mapper)
         self.render.AddActor(self.actor)

@@ -2,28 +2,6 @@ import numpy as np
 import copy
 
 
-class objReader(object):
-    "Load a .obj file"
-
-    def __init__(self, filename):
-        self.vertices = []
-        self.faces = []
-        self.tmp = []
-        for line in open(filename, "r"):
-            if line.startswith("#"):
-                continue
-            values = line.split()
-            if not values:
-                continue
-            if (values[0] == 'v'):
-                v = [float(x) for x in values[1:4]]
-                t = [float(x) for x in values[4:]]
-                self.vertices.append(v)
-                self.tmp.append(t)
-            elif (values[0] == 'f'):
-                self.faces.append([int(x) for x in values[1:4]])
-
-
 class FFD(object):
     "handler of FFD algorithm"
 
